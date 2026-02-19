@@ -90,5 +90,32 @@ namespace MvcCoreSession.Controllers
             }
             return View();
         }
+
+        public IActionResult SessionMascotaJson(string accion)
+        {
+            if (accion != null)
+            {
+                if (accion.ToLower() == "almacenar")
+                {
+                    // Guardamos datos en session
+                    Mascota mascota = new Mascota();
+                    mascota.Nombre = "Eva";
+                    mascota.Raza = "Exploradora";
+                    mascota.Edad = 18;
+                    // Queremos guardar el objeto mascota como string en session
+                    string mascotaJson = HelperJsonSession.SerializeObject<Mascota>(mascota);
+                    HttpContext.Session.SetString("MASCOTAJSON", mascotaJson);
+                    ViewData["MENSAJE"] = "Mensaje almacenada en Session";
+                }
+                else if (accion.ToLower() == "mostrar")
+                {
+                    string jsonMascota = HttpContext.Session.GetString("MASCOTAJSON");
+                    Mascota mascota = HelperJsonSession.DeserializeObject<Mascota>(jsonMascota);
+
+                    ViewData["MASCOTA"] = mascota;
+                }
+            }
+            return View();
+        }
     }
 }
