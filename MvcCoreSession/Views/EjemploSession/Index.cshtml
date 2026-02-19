@@ -1,5 +1,10 @@
-﻿@using MvcCoreSession.Helpers;
+﻿@model List<Mascota>
+@using MvcCoreSession.Extensions
+@using MvcCoreSession.Helpers;
 @{
+    Mascota fujur = Context.Session.GetObject<Mascota>("MASCOTASCOLLECTIONGENERIC");
+
+
     string data = Context.Session.GetString("MASCOTAJSON");
     Mascota mascota = null;
     if (Context.Session.GetString("MASCOTAJSON") != null)
@@ -7,6 +12,8 @@
         mascota = (Mascota)HelperJsonSession.DeserializeObject<Mascota>(data);
     }
 }
+
+
 
 <h1>Ejemplos Session</h1>
 
@@ -18,9 +25,58 @@
     <h2 style="color:green">Nombre: @mascota.Nombre, Raza: @mascota.Raza y Edad: @mascota.Edad</h2>
 }
 
+@if (fujur != null)
+{
+    <h2 style="color:fuchsia">Nombre: @fujur.Nombre, Raza: @fujur.Raza y Edad: @fujur.Edad</h2>
+}
+
 <ul class="list-group">
     <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionSimple">Session Simple</a></li>
     <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionMascotaBytes">Session Mascota</a></li>
     <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionMascotaCollectionBytes">Session Mascota Collection Bytes</a></li>
     <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionMascotaJson">Session Mascota JSON</a></li>
+    <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionMascotaGeneric">Session Mascota Generica</a></li>
+    <li class="list-group-item"><a asp-controller="EjemploSession" asp-action="SessionMascotaCollectionGeneric">Session Mascota Collection Generic</a></li>
 </ul>
+
+
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Raza
+                </th>
+                <th>
+                    Edad
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Raza)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Edad)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
